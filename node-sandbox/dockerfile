@@ -1,0 +1,17 @@
+# Lightweight Linux + Node.js
+FROM node:20-alpine
+
+# Non-root user create (security ke liye)
+RUN addgroup -S sandbox && adduser -S sandbox -G sandbox
+
+# Working directory jaha code mount hoga
+WORKDIR /app
+
+# Permissions set
+RUN chown -R sandbox:sandbox /app
+
+# Root se switch karke normal user
+USER sandbox
+
+# Default command (backend runtime pe override karega)
+CMD ["node"]
