@@ -16,41 +16,71 @@ const express_1 = __importDefault(require("express"));
 const promises_1 = __importDefault(require("fs/promises"));
 const child_process_1 = require("child_process");
 const path_1 = __importDefault(require("path"));
-const dir = path_1.default.join(process.cwd(), "src", "temp");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.post("/run", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const code = req.body.code;
-        console.log("CODE:", code);
-        yield promises_1.default.writeFile("./src/temp/index.js", code);
-        const docker = (0, child_process_1.spawn)("docker", [
+        if (!code) {
+            return res.status(400).json({ msg: "Code required" });
+        }
+        const tempDir = path_1.default.resolve(process.cwd(), "src", "temp");
+        const dockerPath = tempDir.replace(/\\/g, "/");
+        const filePath = path_1.default.join(tempDir, "index.js");
+        yield promises_1.default.mkdir(tempDir, { recursive: true });
+        yield promises_1.default.writeFile(filePath, code);
+        // 🔥 IMPORTANT: docker.exe, no shell
+        const run = (0, child_process_1.spawn)("docker.exe", [
             "run",
-            "--rm",
-            "-v", `${dir}:/app`,
+            "-d",
+            "-v", `${dockerPath}:/app`,
+            "-w", "/app",
             "nodejs",
             "node",
             "index.js"
-        ]);
-        let output = "";
-        let error = "";
-        docker.stderr.on("data", (data) => {
-            error += data.toString();
+        ], {
+            stdio: ["ignore", "pipe", "pipe"]
         });
-        docker.stdout.on('data', (data) => {
-            output += data.toString();
+        let containerId = "";
+        run.stdout.on("data", (data) => {
+            containerId += data.toString().trim();
         });
-        docker.on("close", (code) => {
-            console.log("Exit code:", code);
-            console.log("Output:", output);
-            return res.status(200).json({
-                output: output,
-                error: error
+        run.on("error", (err) => {
+            return res.status(500).json({
+                msg: "Docker run failed",
+                error: err.message
+            });
+        });
+        // ✅ NOW close WILL FIRE
+        run.on("close", () => {
+            if (!containerId) {
+                return res.status(500).json({
+                    msg: "Container ID not received"
+                });
+            }
+            console.log(`container id id `, containerId);
+            // ---- READ LOGS ----
+            const logs = (0, child_process_1.spawn)("docker.exe", ["logs", containerId], { stdio: ["ignore", "pipe", "pipe"] });
+            let output = "";
+            let error = "";
+            logs.stdout.on("data", (data) => {
+                output += data.toString();
+            });
+            logs.stderr.on("data", (data) => {
+                error += data.toString();
+            });
+            logs.on("close", () => {
+                // cleanup
+                (0, child_process_1.spawn)("docker.exe", ["rm", "-f", containerId]);
+                return res.json({
+                    output: output.trim(),
+                    error: error.trim() || null
+                });
             });
         });
     }
     catch (e) {
-        return res.status(400).json({
+        return res.status(500).json({
             msg: e.message
         });
     }
