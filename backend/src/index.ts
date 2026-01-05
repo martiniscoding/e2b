@@ -1,7 +1,6 @@
 import express from "express";
 import fs from "fs/promises";
 import { spawn } from "child_process";
-import path from "path";
 
 const app = express();
 app.use(express.json());
@@ -9,14 +8,7 @@ app.use(express.json());
 app.post("/run", async (req, res) => {
   try {
     const code = req?.body?.code;
-   
-
-    const tempDir = path.resolve(process.cwd(), "src", "temp");
-    const dockerPath = tempDir.replace(/\\/g, "/");
-    const filePath = path.join(tempDir, "index.js");
-
-    await fs.mkdir(tempDir, { recursive: true });
-    await fs.writeFile(filePath, code);
+    await fs.writeFile("./src/temp/index.js", code);
 
     const run = spawn(
       "docker",
@@ -24,7 +16,7 @@ app.post("/run", async (req, res) => {
         "run",
         "--rm",
         "-v",
-        `${dockerPath}:/app`,
+        `./src/temp:/app`,
         "-w",
         "/app",
         "nodejs",

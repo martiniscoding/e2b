@@ -15,23 +15,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const promises_1 = __importDefault(require("fs/promises"));
 const child_process_1 = require("child_process");
-const path_1 = __importDefault(require("path"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.post("/run", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
         const code = (_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.code;
-        const tempDir = path_1.default.resolve(process.cwd(), "src", "temp");
-        const dockerPath = tempDir.replace(/\\/g, "/");
-        const filePath = path_1.default.join(tempDir, "index.js");
-        yield promises_1.default.mkdir(tempDir, { recursive: true });
-        yield promises_1.default.writeFile(filePath, code);
+        yield promises_1.default.writeFile("./src/temp/index.js", code);
         const run = (0, child_process_1.spawn)("docker", [
             "run",
             "--rm",
             "-v",
-            `${dockerPath}:/app`,
+            `./src/temp:/app`,
             "-w",
             "/app",
             "nodejs",
