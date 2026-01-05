@@ -29,14 +29,12 @@ const LandingPage = () => {
         </div>
       </nav>
 
-      {/* Hero Section */}
       <section className="relative pt-44 pb-32 px-6 overflow-hidden">
         {/* Professional Grid Background */}
         <div className="absolute inset-0 z-0 opacity-20 [mask-image:radial-gradient(ellipse_at_center,black,transparent)]">
           <div className="absolute inset-0 h-full w-full bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]"></div>
         </div>
         
-        {/* Dark Red Ambient Glows */}
         <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-red-900/20 blur-[150px] rounded-full -z-10" />
         
         <div className="max-w-6xl mx-auto relative z-10 text-center">
@@ -67,7 +65,6 @@ const LandingPage = () => {
             </button>
           </div>
 
-          {/* Premium Code Interface */}
           <div className="relative max-w-4xl mx-auto">
             <div className="absolute -inset-0.5 bg-gradient-to-r from-red-900/50 to-transparent rounded-2xl blur-xl opacity-50" />
             <div className="relative bg-[#0A0A0A] border border-white/10 rounded-2xl overflow-hidden shadow-3xl">
@@ -95,7 +92,6 @@ const LandingPage = () => {
       </section>
 
     
-      {/* Footer */}
       <footer className="border-t border-white/5 py-20 px-6 bg-[#030000]">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12">
           <div>
@@ -119,15 +115,7 @@ const LandingPage = () => {
   );
 };
 
-const FeatureItem = ({ icon, title, desc }) => (
-  <div className="bg-[#050000] p-10 hover:bg-red-950/10 transition-colors group">
-    <div className="mb-6 p-3 bg-white/5 w-fit rounded-xl group-hover:bg-red-500/10 group-hover:text-white transition-all">
-      {icon}
-    </div>
-    <h3 className="text-lg font-bold text-white mb-3 tracking-tight uppercase">{title}</h3>
-    <p className="text-slate-500 text-sm leading-relaxed">{desc}</p>
-  </div>
-);
+
 
 const FooterColumn = ({ title, links }) => (
   <div className="flex flex-col gap-4">
