@@ -15,6 +15,7 @@ app.post("/run", async (req, res) => {
       [
         "run",
         "--rm",
+        "--memory", "128m",
         "-v",
         `./src/temp:/app`,
         "-w",

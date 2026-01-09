@@ -4,8 +4,7 @@ import { Terminal, Shield, Zap, Code2, ChevronRight, Github, Command, Lock, Cpu 
 const LandingPage = () => {
   return (
     <div className="min-h-screen bg-[#050000] text-slate-300 selection:bg-red-500/30 font-sans antialiased">
-      {/* Navbar */}
-      <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#050000]/70 backdrop-blur-xl">
+=      <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-[#050000]/70 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 bg-gradient-to-br from-red-600 to-red-900 rounded-xl flex items-center justify-center shadow-[0_0_15px_rgba(220,38,38,0.3)]">
@@ -30,7 +29,6 @@ const LandingPage = () => {
       </nav>
 
       <section className="relative pt-44 pb-32 px-6 overflow-hidden">
-        {/* Professional Grid Background */}
         <div className="absolute inset-0 z-0 opacity-20 [mask-image:radial-gradient(ellipse_at_center,black,transparent)]">
           <div className="absolute inset-0 h-full w-full bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]"></div>
         </div>
