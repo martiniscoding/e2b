@@ -15,7 +15,8 @@ app.post("/run", async (req, res) => {
       [
         "run",
         "--rm",
-        "--memory", "128m",
+        "--memory",
+        "128m",
         "-v",
         `./src/temp:/app`,
         "-w",
@@ -26,17 +27,22 @@ app.post("/run", async (req, res) => {
       ],
       { shell: true }
     );
-    let output=""
-    run.stdout.on("data",(data)=>{
-      output+=data
-    
-    })
-    run.stdout.on("close",()=>{
-        return res.status(200).json({
-        "output":output
-      })
-    })
-    
+    const timer = setTimeout(() => {
+      run.kill("SIGKILL");
+    }, 5000);
+
+
+    let output = "";
+    run.stdout.on("data", (data) => {
+      output += data;
+    });
+    run.stdout.on("close", () => 
+      {
+        clearTimeout(timer)
+      return res.status(200).json({
+        output: output,
+      });
+    });
   } catch (e: any) {
     res.status(500).json({ msg: e.message });
   }
